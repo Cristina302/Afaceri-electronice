@@ -9,7 +9,7 @@ dotenv.config();
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const productRoutes = require('./routes/product.routes');
-
+const cartRoutes = require('./routes/cart.routes');
 
 app.use(morgan('dev'));
 app.use(cors());
@@ -25,10 +25,11 @@ app.get('/', (req, res) => {
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
+app.use('/cart', cartRoutes);
 
 
 app.listen(PORT, (req, res) => {
-    console.log(`yay again bby ${PORT}`);
+    console.log(`Server started at http://localhost:${PORT}`);
 });
 
 

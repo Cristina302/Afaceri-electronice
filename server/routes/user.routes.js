@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        console.log(req.body);
         const existingUser = await User.findOne({
             where: { email: req.body.email }
         });
