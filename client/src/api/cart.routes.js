@@ -1,10 +1,5 @@
 import axiosAuth from "../axios/axiosAuth";
 
-/* ---------------------------------------------
-   🛒 CART
----------------------------------------------- */
-
-// Get the authenticated user's cart
 export const getMyCart = async () => {
   try {
     const response = await axiosAuth.get("cart");
@@ -15,7 +10,6 @@ export const getMyCart = async () => {
   }
 };
 
-// Add a product to cart
 export const addProductToCart = async (productId, quantity = 1) => {
     try {
         const data = {"productId": productId, "quantity": quantity}
@@ -27,7 +21,6 @@ export const addProductToCart = async (productId, quantity = 1) => {
   }
 };
 
-// Update a cart item (quantity)
 export const updateCartItem = async (itemId, quantity) => {
     try {
       console.log("trimit put")
@@ -42,7 +35,6 @@ export const updateCartItem = async (itemId, quantity) => {
   }
 };
 
-// Remove a product from cart
 export const deleteCartItem = async (itemId) => {
   try {
     const response = await axiosAuth.delete(`cart/item/${itemId}`);
@@ -53,7 +45,6 @@ export const deleteCartItem = async (itemId) => {
   }
 };
 
-// Clear the entire cart
 export const clearCart = async () => {
   try {
     const response = await axiosAuth.delete("cart/clear");

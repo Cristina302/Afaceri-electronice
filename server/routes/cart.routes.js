@@ -19,7 +19,6 @@ router.get("/", verifyToken, async (req, res) => {
     });
 
     if (!cart) {
-      // Creează un coș gol dacă nu există
       cart = await Cart.create({ userId: req.userId, status: "active", total_price: 0 });
     }
 
@@ -33,7 +32,6 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
-// Adaugă un produs în coș
 router.post("/add", verifyToken, async (req, res) => {
     const { productId, quantity } = req.body;
 
@@ -49,12 +47,10 @@ router.post("/add", verifyToken, async (req, res) => {
       let cartItem = await CartItem.findOne({ where: { cartId: cart.id, productId } });
 
       if (cartItem != null) {
-          //   cartItem.quantity += quantity;
         await cartItem.update({ quantity: cartItem.quantity + quantity });
     } else {
         cartItem = await CartItem.create({ cartId: cart.id, productId, quantity });
     }
-    // Recalculează totalPrice-ul coșului
     await recalculateCartTotal(cart.id);
 
     res.status(200).json({ success: true, message: "Product added to cart", data: cartItem });
@@ -63,7 +59,6 @@ router.post("/add", verifyToken, async (req, res) => {
   }
 });
 
-// Actualizare cantitate produs în coș
 router.put("/item/:id", verifyToken, async (req, res) => {
   const { quantity } = req.body;
 
@@ -83,7 +78,6 @@ router.put("/item/:id", verifyToken, async (req, res) => {
       include: [{ model: Product, as: "product" }]
     });
     
-    // res.json({ success: true, message: "Item updated", data: updatedItem });
     const updatedCart = await Cart.findByPk(cart.id, {
       include: [{
         model: CartItem,
@@ -107,7 +101,6 @@ router.put("/item/:id", verifyToken, async (req, res) => {
   }
 });
 
-// Șterge un produs din coș
 router.delete("/item/:id", verifyToken, async (req, res) => {
   try {
     const item = await CartItem.findByPk(req.params.id);
@@ -126,7 +119,6 @@ router.delete("/item/:id", verifyToken, async (req, res) => {
   }
 });
 
-// Actualizare status coș
 router.put("/status", verifyToken, async (req, res) => {
   try {
     const { status } = req.body;
@@ -150,10 +142,8 @@ router.delete("/clear", verifyToken, async (req, res) => {
     if (!cart)
       return res.json({ success: true, message: "Cart already empty" });
 
-    // șterge întâi toate itemele
     await CartItem.destroy({ where: { cartId: cart.id } });
 
-    // apoi șterge cartul
     await cart.destroy();
 
     res.json({ success: true, message: "Cart cleared" });

@@ -1,10 +1,8 @@
-
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import CreateEditProductForm from '../components/CreateEditProductForm';
 import { getProductById, updateProduct } from '../api/product.routes';
-import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function EditProductPage() {
   const { id } = useParams();

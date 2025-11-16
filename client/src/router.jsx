@@ -1,4 +1,3 @@
-// client/src/router.jsx
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import HomePage from "./pages/HomePage";
@@ -24,7 +23,6 @@ export const router = createBrowserRouter([
         path: "products",
         element: <ProductsPage />,
       },
-      // Protected routes - require authentication
       {
         element: <ProtectedLayout />,
         children: [
@@ -34,7 +32,6 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      // Admin routes - require authentication AND admin role
       {
         element: <AdminRoute />,
         children: [
@@ -48,7 +45,6 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      // Auth routes - require the user to NOT be authenticated
       {
         element: <AuthLayout />,
         children: [

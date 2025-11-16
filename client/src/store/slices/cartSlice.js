@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  items: []  // array de produse din cart
+  items: []  
 }
 
 export const cartSlice = createSlice({
