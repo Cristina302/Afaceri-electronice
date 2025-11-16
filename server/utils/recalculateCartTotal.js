@@ -1,11 +1,10 @@
-const { Cart, CartItem, Product } = require('../database/models');
+const { Cart, CartItem, Product } = require("../database/models");
 
 async function recalculateCartTotal(cartId) {
-
   if (!cartId) return null;
   const items = await CartItem.findAll({
     where: { cartId },
-    include: [{ model: Product, as: 'product' }],
+    include: [{ model: Product, as: "product" }],
   });
 
   let total = 0;

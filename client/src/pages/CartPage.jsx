@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { getMyCart, updateCartItem, deleteCartItem, clearCart } from "../api/cart.routes";
+import {
+  getMyCart,
+  updateCartItem,
+  deleteCartItem,
+  clearCart,
+} from "../api/cart.routes";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { toast } from "sonner";
 
@@ -30,9 +35,8 @@ export default function CartPage() {
     const message = response.data.message;
     const data = response.data.data;
 
-
     if (success) {
-          setCart(data.cart);
+      setCart(data.cart);
     } else {
       toast.error(message || "Error updating item");
     }
@@ -82,7 +86,9 @@ export default function CartPage() {
         <tbody>
           {cart.items.map((item) => (
             <tr key={item.id}>
-              <td className="p-2 border">{item.product?.name || "Product not available"}</td>
+              <td className="p-2 border">
+                {item.product?.name || "Product not available"}
+              </td>
               <td className="p-2 border">
                 ${item.product?.price?.toFixed(2) || "0.00"}
               </td>
@@ -114,7 +120,9 @@ export default function CartPage() {
       </table>
 
       <div className="mt-4 flex justify-between items-center">
-        <p className="text-lg font-bold">Total: ${cart.total_price.toFixed(2)}</p>
+        <p className="text-lg font-bold">
+          Total: ${cart.total_price.toFixed(2)}
+        </p>
         <button
           onClick={handleClearCart}
           className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded"

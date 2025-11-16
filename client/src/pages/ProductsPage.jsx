@@ -97,7 +97,9 @@ export default function ProductsPage() {
     <div className="bg-white h-screen overflow-y-auto">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">Products</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Products
+          </h2>
           {isAdmin && (
             <button
               onClick={handleCreateClick}
@@ -110,7 +112,10 @@ export default function ProductsPage() {
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products.map((product) => (
-            <div key={product.id} className="group relative bg-white rounded-md shadow p-4">
+            <div
+              key={product.id}
+              className="group relative bg-white rounded-md shadow p-4"
+            >
               <div className="relative">
                 <img
                   alt={product.name}
@@ -144,12 +149,15 @@ export default function ProductsPage() {
               <div className="mt-4 flex justify-between items-center">
                 <div>
                   <h3 className="text-sm text-gray-700">{product.name}</h3>
-                  <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {product.category}
+                  </p>
                 </div>
-                <p className="text-sm font-medium text-gray-900">${product.price}</p>
+                <p className="text-sm font-medium text-gray-900">
+                  ${product.price}
+                </p>
               </div>
 
-              {/* Add to Cart Button */}
               {!isAdmin && (
                 <div className="mt-3 flex justify-end">
                   <button

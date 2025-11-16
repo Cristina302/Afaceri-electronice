@@ -1,7 +1,7 @@
 const express = require("express");
 const { Cart, CartItem, Product } = require("../database/models");
 const { verifyToken } = require("../utils/token.js");
-const recalculateCartTotal = require('../utils/recalculateCartTotal.js');
+const recalculateCartTotal = require("../utils/recalculateCartTotal.js");
 
 const router = express.Router();
 
@@ -19,7 +19,11 @@ router.get("/", verifyToken, async (req, res) => {
     });
 
     if (!cart) {
-      cart = await Cart.create({ userId: req.userId, status: "active", total_price: 0 });
+      cart = await Cart.create({
+        userId: req.userId,
+        status: "active",
+        total_price: 0,
+      });
     }
 
     res.status(200).json({
@@ -28,34 +32,65 @@ router.get("/", verifyToken, async (req, res) => {
       data: cart,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: "Error retrieving cart", data: err.message });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Error retrieving cart",
+        data: err.message,
+      });
   }
 });
 
 router.post("/add", verifyToken, async (req, res) => {
-    const { productId, quantity } = req.body;
+  const { productId, quantity } = req.body;
 
   try {
-      let cart = await Cart.findOne({ where: { userId: req.userId } });
+    let cart = await Cart.findOne({ where: { userId: req.userId } });
     if (!cart) {
-      cart = await Cart.create({ userId: req.userId, status: "active", total_price: 0 });
+      cart = await Cart.create({
+        userId: req.userId,
+        status: "active",
+        total_price: 0,
+      });
     }
 
-      const product = await Product.findByPk(productId);
-    if (!product) return res.status(404).json({ success: false, message: "Product not found" });
+    const product = await Product.findByPk(productId);
+    if (!product)
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
 
-      let cartItem = await CartItem.findOne({ where: { cartId: cart.id, productId } });
+    let cartItem = await CartItem.findOne({
+      where: { cartId: cart.id, productId },
+    });
 
-      if (cartItem != null) {
-        await cartItem.update({ quantity: cartItem.quantity + quantity });
+    if (cartItem != null) {
+      await cartItem.update({ quantity: cartItem.quantity + quantity });
     } else {
-        cartItem = await CartItem.create({ cartId: cart.id, productId, quantity });
+      cartItem = await CartItem.create({
+        cartId: cart.id,
+        productId,
+        quantity,
+      });
     }
     await recalculateCartTotal(cart.id);
 
-    res.status(200).json({ success: true, message: "Product added to cart", data: cartItem });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Product added to cart",
+        data: cartItem,
+      });
   } catch (err) {
-    res.status(500).json({ success: false, message: "Error adding product to cart", data: err.message });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Error adding product to cart",
+        data: err.message,
+      });
   }
 });
 
@@ -64,39 +99,44 @@ router.put("/item/:id", verifyToken, async (req, res) => {
 
   try {
     const item = await CartItem.findByPk(req.params.id);
-    if (!item) return res.status(404).json({ success: false, message: "Item not found" });
+    if (!item)
+      return res
+        .status(404)
+        .json({ success: false, message: "Item not found" });
 
     const cart = await Cart.findByPk(item.cartId);
-    if (cart.userId !== req.userId) return res.status(403).json({ success: false, message: "Unauthorized" });
+    if (cart.userId !== req.userId)
+      return res.status(403).json({ success: false, message: "Unauthorized" });
 
     item.quantity = quantity;
-      await item.save();
+    await item.save();
 
     await recalculateCartTotal(cart.id);
-    
+
     const updatedItem = await CartItem.findByPk(item.id, {
-      include: [{ model: Product, as: "product" }]
+      include: [{ model: Product, as: "product" }],
     });
-    
+
     const updatedCart = await Cart.findByPk(cart.id, {
-      include: [{
-        model: CartItem,
-        as: "items",
-        include: [{ model: Product, as: "product" }],
-      }],
+      include: [
+        {
+          model: CartItem,
+          as: "items",
+          include: [{ model: Product, as: "product" }],
+        },
+      ],
     });
     console.log("json", {
       success: true,
       message: "Item updated",
-      data: { cart: updatedCart, updatedItem }
+      data: { cart: updatedCart, updatedItem },
     });
     res.json({
       success: true,
       message: "Item updated",
-      data: { cart: updatedCart, updatedItem }
+      data: { cart: updatedCart, updatedItem },
     });
   } catch (err) {
-      
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -104,10 +144,14 @@ router.put("/item/:id", verifyToken, async (req, res) => {
 router.delete("/item/:id", verifyToken, async (req, res) => {
   try {
     const item = await CartItem.findByPk(req.params.id);
-    if (!item) return res.status(404).json({ success: false, message: "Item not found" });
+    if (!item)
+      return res
+        .status(404)
+        .json({ success: false, message: "Item not found" });
 
     const cart = await Cart.findByPk(item.cartId);
-    if (cart.userId !== req.userId) return res.status(403).json({ success: false, message: "Unauthorized" });
+    if (cart.userId !== req.userId)
+      return res.status(403).json({ success: false, message: "Unauthorized" });
 
     await item.destroy();
 
@@ -123,7 +167,10 @@ router.put("/status", verifyToken, async (req, res) => {
   try {
     const { status } = req.body;
     const cart = await Cart.findOne({ where: { userId: req.userId } });
-    if (!cart) return res.status(404).json({ success: false, message: "Cart not found" });
+    if (!cart)
+      return res
+        .status(404)
+        .json({ success: false, message: "Cart not found" });
 
     cart.status = status;
     await cart.save();
@@ -136,7 +183,6 @@ router.put("/status", verifyToken, async (req, res) => {
 
 router.delete("/clear", verifyToken, async (req, res) => {
   try {
-    
     const cart = await Cart.findOne({ where: { userId: req.userId } });
 
     if (!cart)

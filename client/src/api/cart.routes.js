@@ -11,9 +11,9 @@ export const getMyCart = async () => {
 };
 
 export const addProductToCart = async (productId, quantity = 1) => {
-    try {
-        const data = {"productId": productId, "quantity": quantity}
-        const response = await axiosAuth.post("cart/add", data);
+  try {
+    const data = { productId: productId, quantity: quantity };
+    const response = await axiosAuth.post("cart/add", data);
     return response.data;
   } catch (error) {
     console.error("Error adding product to cart:", error);
@@ -22,12 +22,12 @@ export const addProductToCart = async (productId, quantity = 1) => {
 };
 
 export const updateCartItem = async (itemId, quantity) => {
-    try {
-      console.log("trimit put")
-      
-        const response = await axiosAuth.put(`cart/item/${itemId}`, { quantity });
-      console.log(response);
-        
+  try {
+    console.log("trimit put");
+
+    const response = await axiosAuth.put(`cart/item/${itemId}`, { quantity });
+    console.log(response);
+
     return response;
   } catch (error) {
     console.error("Error updating cart item:", error);
